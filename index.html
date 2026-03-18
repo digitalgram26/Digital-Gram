@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Gram | Marketing & Automation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Khand:wght@400;700&family=Inter:ital,wght@0,300;0,400;0,600;0,900;1,800;1,900&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #000;
+            transition: background-color 0.5s ease;
+        }
+        .font-hindi { font-family: 'Khand', sans-serif; }
+        .font-serif-brand { font-family: 'DM+Serif+Display', serif; }
+        
+        .hero-gradient {
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000000 100%);
+        }
+        .btn-primary {
+            background-color: #fba311;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #000;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        #intro-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; 
+        }
+
+        .ball {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #fba311;
+            border-radius: 50%;
+            visibility: hidden;
+        }
+
+        .logo-text-anim {
+            display: flex;
+            font-size: clamp(2rem, 10vw, 5rem);
+            font-weight: 900;
+            font-style: italic;
+            color: #fff;
+            letter-spacing: -2px;
+        }
+
+        .char { display: inline-block; opacity: 0; transform: translateY(20px); }
+        .char-g { color: #fba311; }
+
+        #main-content {
+            opacity: 0; 
+            visibility: hidden;
+            width: 100%;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        
+        .logo-wrapper {
+            position: relative;
+            height: 85px;
+            width: 250px; 
+            display: flex;
+            align-items: center;
+        }
+        .brand-logo {
+            position: absolute;
+            height: 100%;
+            width: auto;
+            object-fit: contain;
+            transition: opacity 0.4s ease;
+            padding: 5px 0;
+        }
+        
+        #main-logo { opacity: 1; }
+        
+        #navbar.scrolled {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        #navbar.scrolled .social-icon { color: #000; }
+
+        .social-icon {
+            transition: all 0.3s ease;
+            color: white;
+        }
+        .social-icon:hover {
+            color: #fba311 !important;
+            transform: scale(1.15);
+        }
+
+        .form-input {
+            width: 100%;
+            background: #f9f9f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1rem;
+            color: #000;
+            transition: all 0.3s ease;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #fba311;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(251, 163, 17, 0.1);
+        }
+
+        .page-view { display: none; }
+        .page-view.active { display: block; }
+
+        .plan-card {
+            background: #fff;
+            border-radius: 4px;
+            padding: 2.5rem 2rem;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e5e7eb;
+            position: relative;
+            overflow: hidden;
+        }
+        .plan-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
+            border-color: #fba311;
+        }
+        .plan-card.recommended {
+            background: #fff;
+            color: #000;
+            border: 2px solid #fba311;
+            box-shadow: 0 10px 30px -10px rgba(251, 163, 17, 0.15);
+        }
+
+        .core-work-bg {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .growth-btn {
+            background: #000;
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: block;
+            text-align: center;
+            margin-top: auto;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        .growth-btn:hover { background: #fba311; color: #000; }
+        .recommended .growth-btn { background: #000; color: #fff; }
+        .recommended .growth-btn:hover { background: #fba311; color: #000; }
+
+        #loading-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+    </style>
+</head>
+<body class="bg-black text-white overflow-x-hidden">
+
+    <div id="loading-overlay">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#fba311]"></div>
+    </div>
+
+    <!-- INTRO ANIMATION OVERLAY -->
+    <div id="intro-overlay">
+        <div class="ball"></div>
+        <h1 class="logo-text-anim">
+            <span class="char">D</span><span class="char">i</span><span class="char">g</span><span class="char">i</span><span class="char">t</span><span class="char">a</span><span class="char">l</span><span class="char char-g">G</span><span class="char">r</span><span class="char">a</span><span class="char">m</span>
+        </h1>
+    </div>
+
+    <div id="main-content">
+        <header class="fixed top-0 left-0 w-full z-50 px-6 py-4 flex justify-between items-center transition-all duration-300" id="navbar">
+            <div class="flex items-center">
+                <a href="javascript:location.reload()" class="logo-wrapper">
+                    <img id="main-logo" src="https://lh3.googleusercontent.com/d/1GgC2i3AZ3aXf5JVZe-UiySBYskR17Kxh" alt="Logo" class="brand-logo">
+                </a>
+            </div>
+            <nav class="flex space-x-6 items-center">
+                <a href="https://wa.me/918989812254" target="_blank" class="social-icon"><i data-lucide="message-circle"></i></a>
+                <a href="https://www.instagram.com/digitalgramstudio?igsh=MWsyeGRodXM2djNtdg==" target="_blank" class="social-icon"><i data-lucide="instagram"></i></a>
+                <a href="https://www.linkedin.com/company/112501983" target="_blank" class="social-icon"><i data-lucide="linkedin"></i></a>
+                <a href="https://www.youtube.com/@DIGIALGRAM" target="_blank" class="social-icon"><i data-lucide="youtube"></i></a>
+            </nav>
+        </header>
+
+        <!-- LANDING VIEW -->
+        <div id="view-landing" class="page-view active">
+            <section id="hero" class="relative min-h-screen flex flex-col items-center justify-center hero-gradient px-6 pt-20 overflow-hidden text-center">
+                <p class="reveal text-gray-400 uppercase tracking-[0.5em] text-sm mb-6">Marketing & Automation Agency</p>
+                <h1 class="reveal font-black italic mb-8 tracking-tighter text-white uppercase" style="font-size: clamp(3rem, 12vw, 7.5rem); line-height: 0.9;">
+                    Digital<span class="text-[#fba311]">G</span>ram
+                </h1>
+                <p class="reveal max-w-2xl mx-auto text-gray-400 text-lg md:text-xl font-light mb-12">
+                    Turning local ideas into global legends through thoughtful storytelling and intelligent automation.
+                </p>
+                <div class="reveal">
+                    <a href="#contact-section" class="btn-primary text-black font-black px-12 py-5 rounded-full text-sm uppercase tracking-widest inline-block shadow-2xl">Start Your Journey</a>
+                </div>
+            </section>
+
+            <section id="contact-section" class="bg-white text-black py-24 px-6 min-h-screen flex items-center">
+                <div class="max-w-5xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                    <div class="reveal">
+                        <h2 class="font-hindi text-6xl md:text-7xl font-bold mb-6 text-black leading-tight uppercase">संपर्क करें<br><span class="text-[#fba311]">Get in Touch</span></h2>
+                        <p class="text-gray-600 text-xl leading-relaxed font-medium">Fill out the form below to unlock our growth paths and start building your brand legacy.</p>
+                    </div>
+                    <div class="reveal bg-white p-8 md:p-12 rounded-[3rem] shadow-[0_40px_100px_-15px_rgba(0,0,0,0.1)] border border-gray-50">
+                        <form id="contact-form" class="space-y-6">
+                            <input type="text" name="name" placeholder="Business / Personal Name" class="form-input" required>
+                            <input type="email" name="email" placeholder="Email Address" class="form-input" required>
+                            <input type="tel" name="contact" placeholder="Phone Number" class="form-input" required>
+                            <textarea name="message" rows="3" placeholder="Tell us about your goals" class="form-input" required></textarea>
+                            <button type="submit" class="btn-primary w-full text-black font-black py-6 rounded-2xl uppercase tracking-widest text-sm shadow-xl transition-all hover:scale-[1.02]">More About Us <i data-lucide="arrow-right" class="inline-block ml-2 w-4 h-4"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ABOUT & PRICING VIEW -->
+        <div id="view-about" class="page-view bg-white text-black min-h-screen pt-32 pb-24 px-6">
+            <div class="max-w-7xl mx-auto">
+                <!-- WHO WE ARE SECTION -->
+                <div class="mb-48">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+                        <!-- Left Side: Who We Are Content -->
+                        <div class="reveal">
+                            <div class="space-y-10">
+                                <!-- Big and Bold Label -->
+                                <h3 class="text-4xl md:text-5xl font-black uppercase text-black tracking-tight">WHO WE ARE</h3>
+                                
+                                <!-- Smaller Sized Sub-heading -->
+                                <h2 class="text-xl md:text-2xl font-black italic tracking-tight mb-8 leading-tight uppercase text-[#fba311]">
+                                    Digital Roots. Lasting Legacies.
+                                </h2>
+
+                                <div class="space-y-8 text-xl md:text-2xl text-gray-800 leading-relaxed font-medium italic font-serif-brand">
+                                    <p>
+                                        <span class="text-black font-black not-italic font-sans">Digital Gram</span> is the friendly legacy of Seonigram. We help brands grow through thoughtful social media and honest storytelling. We focus on the art of connection, helping you with social media, videos, and creative writing so you can stand out with grace.
+                                    </p>
+                                    <p>
+                                        We believe quality matters. Growth is a journey, and we are here to help. Because we are close to <span class="text-black font-black not-italic font-sans">Seonigram</span> and <span class="text-black font-black not-italic font-sans">Seoni City</span>, we help local people from the Seoni region get noticed—turning local ideas into brands everyone knows.
+                                    </p>
+                                    <p class="text-[#fba311] font-black uppercase text-sm tracking-widest not-italic font-sans pt-6">YOUR FUTURE LEGACY STARTS HERE.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Side: Partner Section -->
+                        <div class="reveal h-full">
+                            <div class="bg-black text-white p-10 md:p-14 rounded-[3rem] sticky top-32">
+                                <h4 class="text-[10px] font-black uppercase tracking-[0.3em] mb-12 text-[#fba311]">OUR PARTNER NETWORK</h4>
+                                <div class="space-y-12">
+                                    <!-- Partner 1 -->
+                                    <a href="https://instagram.com/seonigram_" target="_blank" class="block group">
+                                        <div class="flex items-center gap-6 mb-4">
+                                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-[#fba311] overflow-hidden bg-white shrink-0">
+                                                <img src="https://lh3.googleusercontent.com/d/1IiiDzD_J3bm2koBZ1Fhhm4Xq5m-OQTT7" class="w-full h-full object-cover group-hover:scale-110 transition-transform">
+                                            </div>
+                                            <div>
+                                                <div class="font-black text-2xl md:text-3xl italic tracking-tighter">SEONIGRAM</div>
+                                                <div class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Core Digital Hub</div>
+                                            </div>
+                                        </div>
+                                        <p class="text-sm text-gray-400 leading-relaxed font-medium pl-2">Connecting the heart of Seoni to the digital world through community, culture, and deep-rooted local expertise.</p>
+                                    </a>
+
+                                    <div class="h-px bg-white/10"></div>
+
+                                    <!-- Partner 2 -->
+                                    <a href="https://instagram.com/seoni_city" target="_blank" class="block group">
+                                        <div class="flex items-center gap-6 mb-4">
+                                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-[#fba311] overflow-hidden bg-white shrink-0">
+                                                <img src="https://lh3.googleusercontent.com/d/1paOLZkZjlnryhk7MuqUNuJetHWY9rcgH" class="w-full h-full object-cover group-hover:scale-110 transition-transform">
+                                            </div>
+                                            <div>
+                                                <div class="font-black text-2xl md:text-3xl italic tracking-tighter">SEONI CITY</div>
+                                                <div class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Brand Growth Partner</div>
+                                            </div>
+                                        </div>
+                                        <p class="text-sm text-gray-400 leading-relaxed font-medium pl-2">The definitive guide and voice of Seoni City, bridging local businesses with the city's pulse.</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HOW WE LEAD THE MARKET -->
+                <div class="mb-40">
+                    <h3 class="text-4xl md:text-5xl font-black italic mb-16 text-center uppercase tracking-tighter">HOW WE LEAD THE MARKET</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="bg-[#f9f9f9] p-10 rounded-[2rem] hover:bg-[#fba311] group transition-all duration-300">
+                            <h4 class="font-black text-xl mb-4 uppercase group-hover:text-black">Smart Business Automation</h4>
+                            <p class="text-sm text-gray-600 group-hover:text-black/80 leading-relaxed">We build intelligent automation systems that simplify processes and improve how your business operates online.</p>
+                        </div>
+                        <div class="bg-[#f9f9f9] p-10 rounded-[2rem] hover:bg-[#fba311] group transition-all duration-300">
+                            <h4 class="font-black text-xl mb-4 uppercase group-hover:text-black">Strategic Brand Management</h4>
+                            <p class="text-sm text-gray-600 group-hover:text-black/80 leading-relaxed">We look at your social pages, see what others are doing, and make a plan for your long-term growth.</p>
+                        </div>
+                        <div class="bg-[#f9f9f9] p-10 rounded-[2rem] hover:bg-[#fba311] group transition-all duration-300">
+                            <h4 class="font-black text-xl mb-4 uppercase group-hover:text-black">Working with Others</h4>
+                            <p class="text-sm text-gray-600 group-hover:text-black/80 leading-relaxed">We help you find the right people to work with and build partnerships that get your brand noticed.</p>
+                        </div>
+                        <div class="bg-[#f9f9f9] p-10 rounded-[2rem] hover:bg-[#fba311] group transition-all duration-300">
+                            <h4 class="font-black text-xl mb-4 uppercase group-hover:text-black">The Creative Plan</h4>
+                            <p class="text-sm text-gray-600 group-hover:text-black/80 leading-relaxed">We create a monthly calendar for your posts and find the best tags so your brand stands out.</p>
+                        </div>
+                        <div class="bg-[#f9f9f9] p-10 rounded-[2rem] hover:bg-[#fba311] group transition-all duration-300">
+                            <h4 class="font-black text-xl mb-4 uppercase group-hover:text-black">Beautiful Visuals</h4>
+                            <p class="text-sm text-gray-600 group-hover:text-black/80 leading-relaxed">From daily stories to videos made by customers, we make sure everything looks graceful and professional.</p>
+                        </div>
+                        <div class="bg-[#f9f9f9] p-10 rounded-[2rem] hover:bg-[#fba311] group transition-all duration-300">
+                            <h4 class="font-black text-xl mb-4 uppercase group-hover:text-black">Setting Up Your Pages</h4>
+                            <p class="text-sm text-gray-600 group-hover:text-black/80 leading-relaxed">We set up your business pages and profile links so your followers have a smooth experience.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CORE WORK SECTION -->
+                <div class="mb-40 core-work-bg p-12 md:p-24 rounded-[4rem] text-white">
+                    <div class="text-center mb-20">
+                        <h3 class="text-xs font-black text-[#fba311] tracking-[0.5em] uppercase mb-6">CORE WORK</h3>
+                        <h2 class="text-5xl md:text-7xl font-black italic tracking-tighter uppercase leading-[0.85]">WHAT'S INCLUDED.</h2>
+                        <p class="text-gray-300 mt-6 font-bold uppercase text-xs tracking-widest max-w-xl mx-auto">Our standard work is built to help your brand grow every single day.</p>
+                        <button onclick="openPricingModal()" class="mt-10 bg-[#fba311] text-black px-10 py-4 rounded-full font-black uppercase tracking-widest text-sm hover:bg-white transition-all hover:scale-105 shadow-[0_0_30px_rgba(251,163,17,0.3)]">Growth Plan</button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                        <ul class="space-y-6">
+                            <li class="flex items-center gap-4 font-black uppercase text-xs tracking-tighter border-b border-white/10 pb-4"><i data-lucide="check" class="text-[#fba311] w-5 h-5"></i> Social Media Optimization</li>
+                            <li class="flex items-center gap-4 font-black uppercase text-xs tracking-tighter border-b border-white/10 pb-4"><i data-lucide="check" class="text-[#fba311] w-5 h-5"></i> Multi-Platform Management</li>
+                            <li class="flex items-center gap-4 font-black uppercase text-xs tracking-tighter border-b border-white/10 pb-4"><i data-lucide="check" class="text-[#fba311] w-5 h-5"></i> Business Automation</li>
+                            <li class="flex items-center gap-4 font-black uppercase text-xs tracking-tighter"><i data-lucide="check" class="text-[#fba311] w-5 h-5"></i> High-Quality Video Content</li>
+                        </ul>
+                        <ul class="space-y-6">
+                            <li class="flex items-center gap-4 font-black uppercase text-xs tracking-tighter border-b border-white/10 pb-4"><i data-lucide="check" class="text-[#fba311] w-5 h-5"></i> UGC (User Generated Content)</li>
+                            <li class="flex items-center gap-4 font-black uppercase text-xs tracking-tighter border-b border-white/10 pb-4"><i data-lucide="check" class="text-[#fba311] w-5 h-5"></i> Paid Advertising</li>
+                            <li class="flex items-center gap-4 font-black uppercase text-xs tracking-tighter border-b border-white/10 pb-4"><i data-lucide="check" class="text-[#fba311] w-5 h-5"></i> Collaboration Marketing</li>
+                            <li class="flex items-center gap-4 font-black uppercase text-xs tracking-tighter"><i data-lucide="check" class="text-[#fba311] w-5 h-5"></i> Analytics & Tracking</li>
+                        </ul>
+                        <ul class="space-y-6">
+                            <li class="flex items-center gap-4 font-black uppercase text-xs tracking-tighter border-b border-white/10 pb-4"><i data-lucide="check" class="text-[#fba311] w-5 h-5"></i> Social Media Management</li>
+                            <li class="flex items-center gap-4 font-black uppercase text-xs tracking-tighter border-b border-white/10 pb-4"><i data-lucide="check" class="text-[#fba311] w-5 h-5"></i> AI-Generated Content</li>
+                            <li class="flex items-center gap-4 font-black uppercase text-xs tracking-tighter border-b border-white/10 pb-4"><i data-lucide="check" class="text-[#fba311] w-5 h-5"></i> Creative Poster Design</li>
+                            <li class="flex items-center gap-4 font-black uppercase text-xs tracking-tighter"><i data-lucide="check" class="text-[#fba311] w-5 h-5"></i> Brand Growth Strategy</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- PRICING SECTION -->
+                <div id="pricing-section" class="mb-40">
+                    <div class="text-center mb-20">
+                        <h3 class="text-[#fba311] font-black uppercase tracking-widest text-sm mb-4">PRICING</h3>
+                        <h2 class="text-6xl md:text-7xl font-black italic tracking-tighter uppercase">GROWTH PATH</h2>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Starter Growth Plan -->
+                        <div class="plan-card">
+                            <div class="mb-6">
+                                <h4 class="font-black text-xl tracking-tighter uppercase mb-4 leading-tight">Starter Growth<br>Plan</h4>
+                                <div class="text-4xl font-black text-[#fba311] tracking-tighter mb-4">₹10,000<span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-2">/ Month</span></div>
+                                <p class="text-gray-500 text-[10px] font-bold uppercase leading-relaxed tracking-wider">Perfect for businesses starting their digital journey.</p>
+                            </div>
+                            <ul class="space-y-4 mb-10 flex-grow mt-4">
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> 4 Videos (including 1 AI video)</li>
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> 4 AI-generated posters</li>
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Social media posting</li>
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Basic page management</li>
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Performance monitoring</li>
+                            </ul>
+                            <button onclick="selectPlan('Starter Growth Plan')" class="growth-btn">Select Plan</button>
+                        </div>
+
+                        <!-- Business Growth Plan -->
+                        <div class="plan-card">
+                            <div class="mb-6">
+                                <h4 class="font-black text-xl tracking-tighter uppercase mb-4 leading-tight">Business Growth<br>Plan</h4>
+                                <div class="text-4xl font-black text-[#fba311] tracking-tighter mb-4">₹15,000<span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-2">/ Month</span></div>
+                                <p class="text-gray-500 text-[10px] font-bold uppercase leading-relaxed tracking-wider">Ideal for businesses looking to grow faster online.</p>
+                            </div>
+                            <ul class="space-y-4 mb-10 flex-grow mt-4">
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> 5 Videos (including 2 AI videos)</li>
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> 4 AI-generated posters</li>
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Social media management</li>
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Content planning</li>
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Automated business workflow</li>
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Engagement monitoring</li>
+                            </ul>
+                            <button onclick="selectPlan('Business Growth Plan')" class="growth-btn">Select Plan</button>
+                        </div>
+
+                        <!-- Brand Expansion Plan -->
+                        <div class="plan-card recommended">
+                            <div class="mb-6">
+                                <h4 class="font-black text-xl tracking-tighter uppercase mb-4 leading-tight">Brand Expansion<br>Plan</h4>
+                                <div class="text-4xl font-black text-[#fba311] tracking-tighter mb-4">₹21,000<span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-2">/ Month</span></div>
+                                <p class="text-gray-500 text-[10px] font-bold uppercase leading-relaxed tracking-wider">Designed for brands that want strong digital visibility.</p>
+                            </div>
+                            <ul class="space-y-4 mb-10 flex-grow mt-4">
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> 8 Videos (including 2 AI videos)</li>
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> 6 AI-generated posters</li>
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Social media management</li>
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Content strategy</li>
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Automated business workflow</li>
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Growth monitoring and reports</li>
+                            </ul>
+                            <button onclick="selectPlan('Brand Expansion Plan')" class="growth-btn">Select Plan</button>
+                        </div>
+
+                        <!-- Premium Brand Plan -->
+                        <div class="plan-card">
+                            <div class="mb-6">
+                                <h4 class="font-black text-xl tracking-tighter uppercase mb-4 leading-tight">Premium Brand<br>Plan</h4>
+                                <div class="text-4xl font-black text-[#fba311] tracking-tighter mb-4">₹24,000<span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-2">/ Month</span></div>
+                                <p class="text-gray-500 text-[10px] font-bold uppercase leading-relaxed tracking-wider">For businesses that want maximum growth and reach.</p>
+                            </div>
+                            <ul class="space-y-4 mb-10 flex-grow mt-4">
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> 10 Videos (including 2 AI videos)</li>
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> 6 AI-generated posters</li>
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Complete social media management</li>
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Collaboration marketing</li>
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Promotion through partner pages</li>
+                                <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Automated business workflow</li>
+                            </ul>
+                            <button onclick="selectPlan('Premium Brand Plan')" class="growth-btn">Select Plan</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center pb-24 border-t border-gray-100 pt-24">
+                   <p class="text-gray-400 font-bold uppercase text-[10px] tracking-widest mb-4">Ready to lead the market?</p>
+                   <p class="text-3xl font-black italic tracking-tighter uppercase">Let's build your brand together.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRICING MODAL -->
+    <div id="pricing-modal" class="fixed inset-0 bg-black/80 z-[1000] hidden items-center justify-center p-4 md:p-6 opacity-0 transition-opacity duration-300 backdrop-blur-sm">
+        <div class="relative bg-[#f9f9f9] w-full max-w-7xl rounded-[2rem] p-6 md:p-12 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <button onclick="closePricingModal()" class="absolute top-4 right-4 md:top-8 md:right-8 text-gray-500 hover:text-black bg-white p-3 rounded-full shadow-md transition-colors z-10">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            
+            <div class="text-center mb-12 mt-4">
+                <h3 class="text-[#fba311] font-black uppercase tracking-widest text-sm mb-4">PRICING</h3>
+                <h2 class="text-5xl md:text-6xl font-black italic tracking-tighter text-black uppercase">GROWTH PATH</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-black">
+                <!-- Starter Growth Plan -->
+                <div class="plan-card">
+                    <div class="mb-6">
+                        <h4 class="font-black text-xl tracking-tighter uppercase mb-4 leading-tight text-black">Starter Growth<br>Plan</h4>
+                        <div class="text-4xl font-black text-[#fba311] tracking-tighter mb-4">₹10,000<span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-2">/ Month</span></div>
+                        <p class="text-gray-500 text-[10px] font-bold uppercase leading-relaxed tracking-wider">Perfect for businesses starting their digital journey.</p>
+                    </div>
+                    <ul class="space-y-4 mb-10 flex-grow mt-4">
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> 4 Videos (including 1 AI video)</li>
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> 4 AI-generated posters</li>
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Social media posting</li>
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Basic page management</li>
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Performance monitoring</li>
+                    </ul>
+                    <button onclick="selectPlan('Starter Growth Plan')" class="growth-btn">Select Plan</button>
+                </div>
+
+                <!-- Business Growth Plan -->
+                <div class="plan-card">
+                    <div class="mb-6">
+                        <h4 class="font-black text-xl tracking-tighter uppercase mb-4 leading-tight text-black">Business Growth<br>Plan</h4>
+                        <div class="text-4xl font-black text-[#fba311] tracking-tighter mb-4">₹15,000<span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-2">/ Month</span></div>
+                        <p class="text-gray-500 text-[10px] font-bold uppercase leading-relaxed tracking-wider">Ideal for businesses looking to grow faster online.</p>
+                    </div>
+                    <ul class="space-y-4 mb-10 flex-grow mt-4">
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> 5 Videos (including 2 AI videos)</li>
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> 4 AI-generated posters</li>
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Social media management</li>
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Content planning</li>
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Automated business workflow</li>
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Engagement monitoring</li>
+                    </ul>
+                    <button onclick="selectPlan('Business Growth Plan')" class="growth-btn">Select Plan</button>
+                </div>
+
+                <!-- Brand Expansion Plan -->
+                <div class="plan-card recommended">
+                    <div class="mb-6">
+                        <h4 class="font-black text-xl tracking-tighter uppercase mb-4 leading-tight text-black">Brand Expansion<br>Plan</h4>
+                        <div class="text-4xl font-black text-[#fba311] tracking-tighter mb-4">₹21,000<span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-2">/ Month</span></div>
+                        <p class="text-gray-500 text-[10px] font-bold uppercase leading-relaxed tracking-wider">Designed for brands that want strong digital visibility.</p>
+                    </div>
+                    <ul class="space-y-4 mb-10 flex-grow mt-4">
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> 8 Videos (including 2 AI videos)</li>
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> 6 AI-generated posters</li>
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Social media management</li>
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Content strategy</li>
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Automated business workflow</li>
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Growth monitoring and reports</li>
+                    </ul>
+                    <button onclick="selectPlan('Brand Expansion Plan')" class="growth-btn">Select Plan</button>
+                </div>
+
+                <!-- Premium Brand Plan -->
+                <div class="plan-card">
+                    <div class="mb-6">
+                        <h4 class="font-black text-xl tracking-tighter uppercase mb-4 leading-tight text-black">Premium Brand<br>Plan</h4>
+                        <div class="text-4xl font-black text-[#fba311] tracking-tighter mb-4">₹24,000<span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-2">/ Month</span></div>
+                        <p class="text-gray-500 text-[10px] font-bold uppercase leading-relaxed tracking-wider">For businesses that want maximum growth and reach.</p>
+                    </div>
+                    <ul class="space-y-4 mb-10 flex-grow mt-4">
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> 10 Videos (including 2 AI videos)</li>
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> 6 AI-generated posters</li>
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Complete social media management</li>
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Collaboration marketing</li>
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Promotion through partner pages</li>
+                        <li class="text-[10px] font-bold uppercase text-gray-700 flex items-start leading-tight"><span class="text-[#fba311] mr-3 mt-[-2px] text-lg">•</span> Automated business workflow</li>
+                    </ul>
+                    <button onclick="selectPlan('Premium Brand Plan')" class="growth-btn">Select Plan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        gsap.registerPlugin(ScrollTrigger);
+
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxBZhJN48tHSV6TjhTmxn6tp3Z-Y2UZhJHsPiJuNX8adqmcG4pUm1nRMHy_SU1Juvt2/exec';
+        let currentUserData = {};
+
+        // Intro Animation
+        const tl = gsap.timeline();
+        gsap.set(".ball", { visibility: "visible", scale: 0 });
+        tl.to(".ball", { duration: 0.7, scale: 1, ease: "back.out(2)" })
+          .to(".ball", { duration: 0.5, x: -120, ease: "power3.inOut" }, "+=0.2")
+          .to(".char", { duration: 0.05, opacity: 1, y: 0, stagger: 0.06 })
+          .to("#intro-overlay", { duration: 1, y: "-100%", ease: "expo.inOut", delay: 0.5 })
+          .to("#main-content", { duration: 0.5, opacity: 1, visibility: "visible", onComplete: initScroll });
+
+        function initScroll() {
+            ScrollTrigger.create({
+                trigger: "#contact-section",
+                start: "top 60%",
+                onEnter: () => { 
+                    if(document.getElementById('view-landing').classList.contains('active')) { 
+                        document.body.style.backgroundColor = "#fff"; 
+                        document.getElementById('navbar').classList.add('scrolled'); 
+                        document.getElementById('main-logo').src = "https://lh3.googleusercontent.com/d/1gGLHJGnwl1a_X2zBXPky06_R-XPygXMK";
+                    }
+                },
+                onLeaveBack: () => { 
+                    if(document.getElementById('view-landing').classList.contains('active')) { 
+                        document.body.style.backgroundColor = "#000"; 
+                        document.getElementById('navbar').classList.remove('scrolled'); 
+                        document.getElementById('main-logo').src = "https://lh3.googleusercontent.com/d/1GgC2i3AZ3aXf5JVZe-UiySBYskR17Kxh";
+                    }
+                }
+            });
+            document.querySelectorAll('.reveal').forEach(rev => gsap.to(rev, { scrollTrigger: rev, opacity: 1, y: 0, duration: 1 }));
+        }
+
+        async function sendToGoogle(data) {
+            const params = new URLSearchParams();
+            params.append('name', data.name);
+            params.append('email', data.email);
+            params.append('contact', data.contact);
+            params.append('message', data.message);
+            params.append('growth plan', data.growthPlan || 'None');
+            
+            try {
+                await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors', 
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+            } catch(e) { console.error("Submit error", e); }
+        }
+
+        function openPricingModal() {
+            const modal = document.getElementById('pricing-modal');
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePricingModal() {
+            const modal = document.getElementById('pricing-modal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        async function selectPlan(planName) {
+            closePricingModal();
+            document.getElementById('loading-overlay').style.display = 'flex';
+            currentUserData.growthPlan = planName;
+            await sendToGoogle(currentUserData);
+            
+            const msg = encodeURIComponent(`Hi Digital Gram! I'm interested in the ${planName}. My details: Name: ${currentUserData.name}, Phone: ${currentUserData.contact}. Let's get started!`);
+            window.open(`https://wa.me/918989812254?text=${msg}`, '_blank');
+            document.getElementById('loading-overlay').style.display = 'none';
+        }
+
+        document.getElementById('contact-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const fd = new FormData(e.target);
+            currentUserData = Object.fromEntries(fd.entries());
+            
+            document.getElementById('loading-overlay').style.display = 'flex';
+            await sendToGoogle(currentUserData);
+            document.getElementById('loading-overlay').style.display = 'none';
+            
+            window.scrollTo(0,0);
+            gsap.to("#view-landing", { opacity: 0, duration: 0.4, onComplete: () => {
+                document.getElementById('view-landing').classList.remove('active');
+                document.getElementById('view-about').classList.add('active');
+                document.getElementById('navbar').classList.add('scrolled');
+                document.body.style.backgroundColor = "#fff";
+                document.getElementById('main-logo').src = "https://lh3.googleusercontent.com/d/1gGLHJGnwl1a_X2zBXPky06_R-XPygXMK";
+                gsap.fromTo("#view-about", {opacity:0, y:20}, {opacity:1, y:0, duration: 0.8});
+            }});
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('pricing-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePricingModal();
+            }
+        });
+    </script>
+</body>
+</html>
